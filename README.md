@@ -125,8 +125,11 @@ AniLibrary/
 ## Список использованных источников
 
 https://react.dev/
+
 https://www.postgresql.org/
+
 https://expressjs.com/
+
 https://nodejs.org/en
 
 ## Используемые технологии
