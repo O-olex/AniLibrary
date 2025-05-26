@@ -119,8 +119,28 @@ AniLibrary/
    - Поиск аниме в рамках списков
 
 ## Структура базы данных
+![1](https://github.com/user-attachments/assets/29886c4d-4f77-4e34-80a8-82fb5e183529)
 
 ## Примеры использования проекта
+
+![3](https://github.com/user-attachments/assets/3fcdf559-dbb4-464f-b955-af772d9a0598)
+### Главная страница
+
+![2](https://github.com/user-attachments/assets/f3cd77b3-cd89-49b3-928b-2665056e8c61)
+### Страница со списком всех аниме 
+    
+![4](https://github.com/user-attachments/assets/40f23085-ce82-496e-ae89-c3a4e7b82971)
+![5](https://github.com/user-attachments/assets/ac80a0ab-6169-4831-8ea8-d6141e9eaf85)
+### Страницы входа и регистрации
+
+![6](https://github.com/user-attachments/assets/c60d9246-5d2b-48f4-b11e-8f5a49f4e74b)
+### Страница просмотренных аниме
+
+![7](https://github.com/user-attachments/assets/5ed037a7-012c-4d7c-9202-b2345c5f4186)
+### Админ панель для менеджмента аниме
+
+![8](https://github.com/user-attachments/assets/7b93eb0c-dade-4394-bb4e-235e966aaa23)
+### Админ панель для менеджмента пользователей
 
 ## Список использованных источников
 
