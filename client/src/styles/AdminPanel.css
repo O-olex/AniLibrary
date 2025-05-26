@@ -1,0 +1,288 @@
+.admin-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background-color);
+}
+
+.admin-panel h1 {
+  margin-bottom: 2rem;
+  color: var(--primary-color);
+  text-align: left;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 1rem;
+  background: var(--background-color);
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid var(--primary-color);
+  background: none;
+  color: var(--primary-color);
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.tab-button.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.tab-button:active {
+  transform: translateY(1px);
+}
+
+.tab-content {
+  flex: 1;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.tab-pane {
+  height: 100%;
+  min-height: 400px;
+  padding: 2rem;
+}
+
+/* Anime Management Styles */
+.anime-form {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.anime-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.anime-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.anime-item {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.anime-info h3 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.anime-info p {
+  margin-bottom: 0.5rem;
+}
+
+.anime-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btn-danger {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+}
+
+/* User Management Styles */
+.user-management {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-management h2 {
+  padding: 1.5rem;
+  margin: 0;
+  color: var(--primary-color);
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+}
+
+.user-list {
+  flex: 1;
+  padding: 1.5rem;
+  overflow: auto;
+}
+
+.user-management table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.user-management th,
+.user-management td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.user-management th {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 500;
+}
+
+.user-management tr:last-child td {
+  border-bottom: none;
+}
+
+.user-management tr:hover {
+  background-color: #f8f9fa;
+}
+
+.user-management td:last-child {
+  text-align: right;
+}
+
+.user-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.user-actions .btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* Loading and error states */
+.loading,
+.error,
+.no-users {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-color);
+  font-size: 1.1rem;
+}
+
+.error {
+  color: var(--error-color);
+}
+
+/* Search styles */
+.search-container {
+  margin-bottom: 1.5rem;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: white;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+}
+
+.search-input::placeholder {
+  color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+  .admin-panel {
+    margin: -1rem;
+  }
+
+  .admin-panel h1 {
+    padding: 0 1rem;
+  }
+
+  .admin-tabs {
+    flex-direction: column;
+    padding: 1rem;
+    margin: 0;
+  }
+
+  .tab-content {
+    border-radius: 0;
+  }
+
+  .tab-pane {
+    padding: 1rem;
+  }
+
+  .anime-list {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .anime-actions {
+    flex-direction: column;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+
+  .user-management h2 {
+    padding: 1rem;
+  }
+
+  .user-list {
+    padding: 1rem;
+  }
+
+  .user-management {
+    overflow-x: auto;
+  }
+
+  .user-management table {
+    min-width: 600px;
+  }
+
+  .user-management th,
+  .user-management td {
+    padding: 0.75rem;
+  }
+}

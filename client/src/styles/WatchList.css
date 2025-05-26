@@ -1,0 +1,292 @@
+.watchlist-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.watchlist-container h1 {
+  margin-bottom: 2rem;
+  color: var(--primary-color);
+}
+
+.list-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid var(--primary-color);
+  background: none;
+  color: var(--primary-color);
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.tab-button.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.tab-button:active {
+  transform: translateY(1px);
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: var(--text-color);
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+  color: var(--error-color);
+  font-size: 1.2rem;
+}
+
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-color);
+  font-size: 1.2rem;
+}
+
+.anime-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.anime-card {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.anime-card:hover {
+  transform: translateY(-5px);
+}
+
+.anime-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.anime-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.anime-content {
+  padding: 1.5rem;
+}
+
+.anime-content h3 {
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+.anime-description {
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.anime-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.anime-details span {
+  display: block;
+}
+
+.anime-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.anime-actions button {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-color-dark);
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary-color-dark);
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.rating-section {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: var(--background-color);
+  border-radius: 4px;
+}
+
+.rating-input {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rating-input label {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.rating-input select {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.rating-input select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.comment-section {
+  margin-top: 1rem;
+}
+
+.comment-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.comment-edit textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  resize: vertical;
+}
+
+.comment-edit textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.comment-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.comment-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.comment-display p {
+  margin: 0;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.comment-display button {
+  align-self: flex-start;
+}
+
+@media (max-width: 768px) {
+  .watchlist-container {
+    padding: 1rem;
+  }
+
+  .anime-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .anime-actions {
+    flex-direction: column;
+  }
+
+  .anime-actions button {
+    width: 100%;
+  }
+
+  .list-tabs {
+    flex-direction: column;
+  }
+
+  .tab-button {
+    width: 100%;
+  }
+
+  .rating-input {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rating-input select {
+    width: 100%;
+  }
+
+  .comment-actions {
+    flex-direction: column;
+  }
+
+  .comment-actions button {
+    width: 100%;
+  }
+}
