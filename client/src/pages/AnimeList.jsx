@@ -15,8 +15,12 @@ const AnimeList = () => {
   const [userRatings, setUserRatings] = useState({});
   const [watchedList, setWatchedList] = useState([]);
   const [addingAnime, setAddingAnime] = useState(null);
+  const [addingToPlanned, setAddingToPlanned] = useState(null);
   const [ratingForm, setRatingForm] = useState({
     rating: "",
+    comment: "",
+  });
+  const [plannedForm, setPlannedForm] = useState({
     comment: "",
   });
 
@@ -82,7 +86,7 @@ const AnimeList = () => {
         return;
       }
 
-      const response = await axios.post(`/api/user/anime/${animeId}`, {
+      await axios.post(`/api/user/anime/${animeId}`, {
         status: "watched",
         rating: ratingValue,
         comment: ratingForm.comment || null,
@@ -115,6 +119,43 @@ const AnimeList = () => {
     }
   };
 
+  const addToPlanned = async (animeId) => {
+    try {
+      await axios.post(`/api/user/anime/${animeId}`, {
+        status: "planned",
+        rating: null,
+        comment: plannedForm.comment,
+      });
+
+      setActionStatus({
+        message: "Successfully added to plan to watch list!",
+        type: "success",
+      });
+
+      setAddingToPlanned(null);
+      setPlannedForm({ comment: "" });
+
+      // Refresh the anime list to update the UI
+      await fetchAnimes("", currentPage);
+
+      setTimeout(() => {
+        setActionStatus({ message: "", type: "" });
+      }, 3000);
+    } catch (error) {
+      console.error(
+        "Error adding to plan list:",
+        error.response?.data || error
+      );
+      setActionStatus({
+        message: error.response?.data?.message || "Error adding to plan list",
+        type: "error",
+      });
+      setTimeout(() => {
+        setActionStatus({ message: "", type: "" });
+      }, 3000);
+    }
+  };
+
   useEffect(() => {
     fetchAnimes();
   }, []);
@@ -130,6 +171,14 @@ const AnimeList = () => {
   const handleRatingFormChange = (e) => {
     const { name, value } = e.target;
     setRatingForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handlePlannedFormChange = (e) => {
+    const { name, value } = e.target;
+    setPlannedForm((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -185,30 +234,10 @@ const AnimeList = () => {
                     <span>Genre: {anime.genre.join(", ")}</span>
                     <span>Year: {anime.releaseYear}</span>
                     <span>Episodes: {anime.episodes}</span>
-
                     <div className="rating-info">
                       <span className="rating-label">Overall Rating: </span>
                       {renderRating(anime.rating, anime.ratingCount)}
                     </div>
-
-                    {user && userRatings[anime.id] && (
-                      <div className="user-rating-info">
-                        <div className="user-rating">
-                          <span className="rating-label">Your Rating: </span>
-                          <span className="rating-value">
-                            {userRatings[anime.id].rating}/10
-                          </span>
-                        </div>
-                        {userRatings[anime.id].comment && (
-                          <div className="user-comment">
-                            <span className="comment-label">
-                              Your Comment:{" "}
-                            </span>
-                            <p>{userRatings[anime.id].comment}</p>
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
 
                   {user ? (
@@ -260,13 +289,52 @@ const AnimeList = () => {
                             </button>
                           </div>
                         </div>
+                      ) : addingToPlanned === anime.id ? (
+                        <div className="rating-form">
+                          <div className="form-group">
+                            <label htmlFor="planned-comment">Add a Note:</label>
+                            <textarea
+                              id="planned-comment"
+                              name="comment"
+                              value={plannedForm.comment}
+                              onChange={handlePlannedFormChange}
+                              placeholder="Write why you want to watch this anime..."
+                              rows="3"
+                            />
+                          </div>
+                          <div className="form-actions">
+                            <button
+                              className="btn btn-primary"
+                              onClick={() => addToPlanned(anime.id)}
+                            >
+                              Save & Add to Plan
+                            </button>
+                            <button
+                              className="btn btn-secondary"
+                              onClick={() => {
+                                setAddingToPlanned(null);
+                                setPlannedForm({ comment: "" });
+                              }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
                       ) : (
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => setAddingAnime(anime.id)}
-                        >
-                          Add to Watched
-                        </button>
+                        <div className="anime-actions">
+                          <button
+                            className="btn btn-primary"
+                            onClick={() => setAddingAnime(anime.id)}
+                          >
+                            Add to Watched
+                          </button>
+                          <button
+                            className="btn btn-secondary"
+                            onClick={() => setAddingToPlanned(anime.id)}
+                          >
+                            Add to Plan
+                          </button>
+                        </div>
                       )
                     ) : (
                       <div className="already-watched">
