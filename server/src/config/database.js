@@ -37,6 +37,14 @@ export const initializeDatabase = async (options = { alter: false }) => {
     console.log("Database connection has been established successfully.");
 
     if (options.alter) {
+      // First, ensure all status values are valid
+      await sequelize.query(`
+        UPDATE animes 
+        SET status = 'COMPLETED' 
+        WHERE status NOT IN ('ONGOING', 'COMPLETED', 'UPCOMING');
+      `);
+
+      // Now proceed with the normal sync
       await sequelize.sync({ alter: true });
       console.log("Database tables structure updated successfully");
     }

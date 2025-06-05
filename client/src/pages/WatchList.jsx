@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SearchBar from "../components/SearchBar";
+import AnimeFilters from "../components/AnimeFilters";
 import "../styles/WatchList.css";
 
 const WatchList = () => {
@@ -12,13 +13,32 @@ const WatchList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [editingAnime, setEditingAnime] = useState(null);
   const [editComment, setEditComment] = useState("");
+  const [filters, setFilters] = useState({
+    genre: "",
+    year: "",
+    status: "",
+  });
 
   const fetchLists = async (search = "") => {
     try {
       setLoading(true);
       const [watchedResponse, plannedResponse] = await Promise.all([
-        axios.get(`/api/user/watched${search ? `?search=${search}` : ""}`),
-        axios.get(`/api/user/planned${search ? `?search=${search}` : ""}`),
+        axios.get(`/api/user/watched`, {
+          params: {
+            search,
+            genre: filters.genre,
+            year: filters.year,
+            status: filters.status,
+          },
+        }),
+        axios.get(`/api/user/planned`, {
+          params: {
+            search,
+            genre: filters.genre,
+            year: filters.year,
+            status: filters.status,
+          },
+        }),
       ]);
 
       setWatchedList(watchedResponse.data);
@@ -33,11 +53,18 @@ const WatchList = () => {
   };
 
   useEffect(() => {
-    fetchLists();
-  }, []);
+    fetchLists(searchTerm);
+  }, [searchTerm, filters]); // Re-fetch when filters change
 
   const handleSearch = (term) => {
-    fetchLists(term);
+    setSearchTerm(term);
+  };
+
+  const handleFilterChange = (filterName, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [filterName]: value,
+    }));
   };
 
   const handleRemoveFromList = async (animeId) => {
@@ -90,11 +117,15 @@ const WatchList = () => {
     }
   };
 
-  const handleCommentSubmit = async (animeId, comment) => {
+  const handleCommentSubmit = async (animeId) => {
     try {
-      const anime = watchedList.find((a) => a.anime.id === animeId);
+      const anime =
+        activeTab === "watched"
+          ? watchedList.find((a) => a.anime.id === animeId)
+          : plannedList.find((a) => a.anime.id === animeId);
+
       await axios.post(`/api/user/anime/${animeId}`, {
-        status: "watched",
+        status: activeTab === "watched" ? "watched" : "planned",
         rating: anime?.rating || null,
         comment: editComment,
       });
@@ -120,7 +151,10 @@ const WatchList = () => {
   return (
     <div className="page-container">
       <h1>My Lists</h1>
-      <SearchBar onSearch={handleSearch} />
+      <div className="filters-container">
+        <SearchBar onSearch={handleSearch} />
+        <AnimeFilters filters={filters} onFilterChange={handleFilterChange} />
+      </div>
 
       <div className="list-tabs">
         <button
@@ -189,62 +223,62 @@ const WatchList = () => {
                         ))}
                       </select>
                     </div>
-
-                    <div className="comment-section">
-                      {editingAnime === userAnime.anime.id ? (
-                        <div className="comment-edit">
-                          <textarea
-                            value={editComment}
-                            onChange={(e) => setEditComment(e.target.value)}
-                            placeholder="Write your comment..."
-                            rows="3"
-                          />
-                          <div className="comment-actions">
-                            <button
-                              className="btn btn-primary"
-                              onClick={() =>
-                                handleCommentSubmit(userAnime.anime.id)
-                              }
-                            >
-                              Save
-                            </button>
-                            <button
-                              className="btn btn-secondary"
-                              onClick={() => {
-                                setEditingAnime(null);
-                                setEditComment("");
-                              }}
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="comment-display">
-                          <p>
-                            {userAnime.comment ? (
-                              <>
-                                <strong>Your Comment: </strong>
-                                {userAnime.comment}
-                              </>
-                            ) : (
-                              "No comment yet"
-                            )}
-                          </p>
-                          <button
-                            className="btn btn-secondary"
-                            onClick={() => {
-                              setEditingAnime(userAnime.anime.id);
-                              setEditComment(userAnime.comment || "");
-                            }}
-                          >
-                            {userAnime.comment ? "Edit Comment" : "Add Comment"}
-                          </button>
-                        </div>
-                      )}
-                    </div>
                   </div>
                 )}
+
+                <div className="comment-section">
+                  {editingAnime === userAnime.anime.id ? (
+                    <div className="comment-edit">
+                      <textarea
+                        value={editComment}
+                        onChange={(e) => setEditComment(e.target.value)}
+                        placeholder="Write your comment..."
+                        rows="3"
+                      />
+                      <div className="comment-actions">
+                        <button
+                          className="btn btn-primary"
+                          onClick={() =>
+                            handleCommentSubmit(userAnime.anime.id)
+                          }
+                        >
+                          Save
+                        </button>
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => {
+                            setEditingAnime(null);
+                            setEditComment("");
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="comment-display">
+                      <p>
+                        {userAnime.comment ? (
+                          <>
+                            <strong>Your Comment: </strong>
+                            {userAnime.comment}
+                          </>
+                        ) : (
+                          "No comment yet"
+                        )}
+                      </p>
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => {
+                          setEditingAnime(userAnime.anime.id);
+                          setEditComment(userAnime.comment || "");
+                        }}
+                      >
+                        {userAnime.comment ? "Edit Comment" : "Add Comment"}
+                      </button>
+                    </div>
+                  )}
+                </div>
 
                 <div className="anime-actions">
                   {activeTab === "watched" ? (

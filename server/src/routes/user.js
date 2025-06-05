@@ -6,54 +6,53 @@ import { Op } from "sequelize";
 
 const router = express.Router();
 
+// Helper function to build filter conditions
+const buildAnimeFilterConditions = (query) => {
+  const conditions = {};
+
+  if (query.genre) {
+    conditions.genre = {
+      [Op.contains]: [query.genre],
+    };
+  }
+
+  if (query.year) {
+    conditions.releaseYear = parseInt(query.year);
+  }
+
+  if (query.status) {
+    conditions.status = query.status;
+  }
+
+  if (query.search) {
+    conditions.title = {
+      [Op.iLike]: `%${query.search}%`,
+    };
+  }
+
+  return conditions;
+};
+
 // Get user's watched anime list
 router.get("/watched", auth, async (req, res) => {
   try {
-    const { search } = req.query;
-    const whereClause = {
-      userId: req.user.id,
-      status: "watched",
-    };
+    const animeConditions = buildAnimeFilterConditions(req.query);
 
-    const include = {
-      model: Anime,
-      as: "anime",
-      attributes: [
-        "id",
-        "title",
-        "description",
-        "imageUrl",
-        "genre",
-        "releaseYear",
-        "episodes",
-        "rating",
-        "ratingCount",
-      ],
-    };
-
-    // Add title search if search parameter is provided
-    if (search) {
-      include.where = {
-        title: {
-          [Op.iLike]: `%${search}%`,
+    const userAnimeList = await UserAnime.findAll({
+      where: {
+        userId: req.user.id,
+        status: "watched",
+      },
+      include: [
+        {
+          model: Anime,
+          as: "anime",
+          where: animeConditions,
         },
-      };
-    }
-
-    const watchedAnime = await UserAnime.findAll({
-      where: whereClause,
-      include: [include],
-      attributes: [
-        "id",
-        "status",
-        "rating",
-        "comment",
-        "createdAt",
-        "updatedAt",
       ],
     });
 
-    res.json(watchedAnime);
+    res.json(userAnimeList);
   } catch (error) {
     console.error("Error fetching watched list:", error);
     res.status(500).json({ message: "Error fetching watched list" });
@@ -63,51 +62,23 @@ router.get("/watched", auth, async (req, res) => {
 // Get user's planned anime list
 router.get("/planned", auth, async (req, res) => {
   try {
-    const { search } = req.query;
-    const whereClause = {
-      userId: req.user.id,
-      status: "planned",
-    };
+    const animeConditions = buildAnimeFilterConditions(req.query);
 
-    const include = {
-      model: Anime,
-      as: "anime",
-      attributes: [
-        "id",
-        "title",
-        "description",
-        "imageUrl",
-        "genre",
-        "releaseYear",
-        "episodes",
-        "rating",
-        "ratingCount",
-      ],
-    };
-
-    // Add title search if search parameter is provided
-    if (search) {
-      include.where = {
-        title: {
-          [Op.iLike]: `%${search}%`,
+    const userAnimeList = await UserAnime.findAll({
+      where: {
+        userId: req.user.id,
+        status: "planned",
+      },
+      include: [
+        {
+          model: Anime,
+          as: "anime",
+          where: animeConditions,
         },
-      };
-    }
-
-    const plannedAnime = await UserAnime.findAll({
-      where: whereClause,
-      include: [include],
-      attributes: [
-        "id",
-        "status",
-        "rating",
-        "comment",
-        "createdAt",
-        "updatedAt",
       ],
     });
 
-    res.json(plannedAnime);
+    res.json(userAnimeList);
   } catch (error) {
     console.error("Error fetching planned list:", error);
     res.status(500).json({ message: "Error fetching planned list" });

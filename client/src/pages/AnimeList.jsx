@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SearchBar from "../components/SearchBar";
+import AnimeFilters from "../components/AnimeFilters";
 import { useAuth } from "../context/AuthContext";
 import "../styles/AnimeList.css";
 
@@ -23,13 +24,24 @@ const AnimeList = () => {
   const [plannedForm, setPlannedForm] = useState({
     comment: "",
   });
+  const [filters, setFilters] = useState({
+    genre: "",
+    year: "",
+    status: "",
+  });
 
   const fetchAnimes = async (searchTerm = "", page = 1) => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `/api/anime?page=${page}${searchTerm ? `&search=${searchTerm}` : ""}`
-      );
+      const response = await axios.get("/api/anime", {
+        params: {
+          page,
+          search: searchTerm,
+          genre: filters.genre,
+          year: filters.year,
+          status: filters.status,
+        },
+      });
 
       // Get the anime list with overall ratings
       const animeList = response.data.anime;
@@ -37,23 +49,25 @@ const AnimeList = () => {
       setCurrentPage(response.data.currentPage);
 
       // Fetch user ratings and watched list separately
-      try {
-        const watchedResponse = await axios.get("/api/user/watched");
+      if (user) {
+        try {
+          const watchedResponse = await axios.get("/api/user/watched");
 
-        // Set user ratings and watched list from the same response
-        const ratings = {};
-        const watchedIds = [];
-        watchedResponse.data.forEach((item) => {
-          ratings[item.anime.id] = {
-            rating: item.rating,
-            comment: item.comment,
-          };
-          watchedIds.push(item.anime.id);
-        });
-        setUserRatings(ratings);
-        setWatchedList(watchedIds);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+          // Set user ratings and watched list from the same response
+          const ratings = {};
+          const watchedIds = [];
+          watchedResponse.data.forEach((item) => {
+            ratings[item.anime.id] = {
+              rating: item.rating,
+              comment: item.comment,
+            };
+            watchedIds.push(item.anime.id);
+          });
+          setUserRatings(ratings);
+          setWatchedList(watchedIds);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
       }
 
       // Set the anime list after getting user ratings
@@ -157,11 +171,19 @@ const AnimeList = () => {
   };
 
   useEffect(() => {
-    fetchAnimes();
-  }, []);
+    fetchAnimes("", currentPage);
+  }, [filters]); // Re-fetch when filters change
 
   const handleSearch = (searchTerm) => {
     fetchAnimes(searchTerm, 1); // Reset to first page on new search
+  };
+
+  const handleFilterChange = (filterName, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [filterName]: value,
+    }));
+    setCurrentPage(1); // Reset to first page when filters change
   };
 
   const handlePageChange = (page) => {
@@ -205,10 +227,13 @@ const AnimeList = () => {
   return (
     <div className="page-container">
       <h1>Anime List</h1>
-      <SearchBar onSearch={handleSearch} />
+      <div className="filters-container">
+        <SearchBar onSearch={handleSearch} />
+        <AnimeFilters filters={filters} onFilterChange={handleFilterChange} />
+      </div>
 
       {actionStatus.message && (
-        <div className={`action-status ${actionStatus.type}`}>
+        <div className={`status-message ${actionStatus.type}`}>
           {actionStatus.message}
         </div>
       )}
